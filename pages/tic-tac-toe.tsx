@@ -1,12 +1,12 @@
 import { Default } from 'components/layouts/Default';
 import { GetServerSideProps, NextPage } from 'next';
 import { getSession } from 'next-auth/react';
-import { MicroBlog } from 'components/templates/microBlog';
+import { TicTacToe } from 'components/templates/TicTacToe';
 
 const MicroBlogPage: NextPage = () => {
   return (
-    <Default pageName="Micro Blogger">
-      <MicroBlog />
+    <Default pageName="TIC-TAC-TOE">
+      <TicTacToe />
     </Default>
   );
 };

@@ -23,7 +23,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     res.status(200).json(message);
   } catch (error) {
-    res.status(400).json({ error });
-    console.error(error);
+    if (error instanceof Error) {
+      console.error(error.message);
+      res.status(400).json(error.message);
+    }
   }
 }

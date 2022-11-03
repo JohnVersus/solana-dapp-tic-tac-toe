@@ -1,126 +1,31 @@
-### `Micro Blog Solana Smart Contract`
+### `Multiplayer TIC-TAC-TOE Game on Solana`
 
 ---
 
-Start a new rust library project named as micro_blog
+### `Smart Contract Code`
 
-```bash
-cargo init micro_blog --lib
-
-cd micro_blog
-```
-
-Update `Cargo.toml` file with required rust library configurations
-
-```
-[lib]
-name = "micro_blog"
-crate-type = ["cdylib", "lib"]
-```
-
-Install the `solana_program` and `borsh` package using
-
-```
-cargo add solana_program
-cargo add borsh
-```
-
-Program Code
-
-```rs
-use borsh::{BorshDeserialize, BorshSerialize};
-use std::str;
-
-use solana_program::{
-    account_info::AccountInfo, entrypoint, entrypoint::ProgramResult, msg,
-    program_error::ProgramError, pubkey::Pubkey,
-};
-
-// Create a struct to store Blog count
-#[derive(BorshSerialize, BorshDeserialize, Debug)]
-pub struct BlogCount {
-    pub total_blogs: u32,
-}
-
-// Function to convert buffer array back to string
-pub fn buffer_to_string(buffer: &[u8]) -> &str {
-    let s = match str::from_utf8(buffer) {
-        Ok(v) => v,
-        Err(e) => panic!("Invalid UTF-8 sequence: {}", e),
-    };
-    return s;
-}
-
-entrypoint!(micro_blog);
-
-pub fn micro_blog(
-    program_id: &Pubkey,
-    accounts: &[AccountInfo],
-    instruction_data: &[u8],
-) -> ProgramResult {
-    let data = buffer_to_string(&instruction_data);
-
-    let account = &accounts[0];
-
-    // Check if the account is owned by this program, else throw an error.
-    if account.owner != program_id {
-        msg!(
-            "Account {:?} does not have the program id {} as owner",
-            account,
-            program_id
-        );
-        return Err(ProgramError::IncorrectProgramId);
-    }
-
-    // Increment and store the number of times user created a new blog.
-    let mut blog_counter = BlogCount::try_from_slice(&account.data.borrow())?;
-    blog_counter.total_blogs += 1;
-    blog_counter.serialize(&mut &mut account.data.borrow_mut()[..])?;
-
-    // Save the data to the transaction logs
-    msg!("Author: {}", accounts[1].key);
-    msg!("Blog No: {}", blog_counter.total_blogs);
-    msg!("Blog: {}", data);
-
-    Ok(())
-}
-
-```
-
-Build the Solana Rust Program using
-
-```bash
-cargo build-bpf
-```
-
-Once built successfully without any error `.so` of the program will be added to the `/target/deploy` folder. You can deploy this to solana cluster using.
-
-```bash
-solana program deploy ./target/deploy/micro_blog.so
-```
-
-Once successfully deployed it will return the programId of the Solana Program.
+Get the contract code from [here](https://github.com/JohnVersus/solana-contracts):
 
 ### `Testing in frontend`
 
 📄 Clone the repo:
 
 ```sh
-git clone https://github.com/johnvsnagendra/solana-smart-contract-micro-blog.git
+git clone https://github.com/JohnVersus/solana-smart-contract-tic-tac-toe.git
 ```
 
 💿 Install all dependencies:
 
 ```sh
-cd solana-smart-contract-micro-blog
+cd solana-smart-contract-tic-tac-toe
 yarn install
 ```
 
-✏ Rename `.env.local.example` to `.env.local` and provide required data. Get your Web3 Api Key from the [Moralis dashboard](https://admin.moralis.io/):
+✏ Rename `.env.local.example` to `.env.local` and provide required data.
+
+Get your Web3 Api Key from the [Moralis dashboard](https://admin.moralis.io/):
 
 ![image](https://user-images.githubusercontent.com/78314301/186810270-7c365d43-ebb8-4546-a383-32983fbacef9.png)
-
-➕ Add the program Id in `src/components/templates/microBlog/MicroBlog.tsx`
 
 🚴‍♂️ Run your App:
 
